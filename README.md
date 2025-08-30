@@ -36,3 +36,25 @@ Technologies Used
     gcc -o bank bank.c
     ./bank
 
+    
+
+
+
+
+https://github.com/user-attachments/assets/3d356771-aa8e-486d-8072-0aa3db030d60
+
+
+
+https://github.com/user-attachments/assets/8c19fd06-b90e-45c9-9667-52260c9ce2b6
+
+
+
+
+https://github.com/user-attachments/assets/dbd53a5e-ceb5-4018-bb7d-c3833141f594
+
+
+
+https://github.com/user-attachments/assets/54cd93e7-16ca-43b2-bfab-7d15502a0908
+
+
+
