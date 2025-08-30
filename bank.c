@@ -45,6 +45,7 @@ void simpleEncryptDecrypt(char *input); // Simple XOR encryption for demonstrati
 void addTransaction(Node *customers, TransactionBlock *transactions);
 int verifyPassword(char *wantPassword, char *inPassword);
 Node *findCustomerByTransactionID(Node *customers, char *input);
+int hasCustomers(Node *customers);
 
 int main()
 {
@@ -85,6 +86,11 @@ int main()
         }
         case 2:
         {
+            if (!hasCustomers(customers))
+            {
+                printf("Error: No customers exist. Please create a customer first.\n");
+                break;
+            }
             char customerID[12];
             printf("Enter the customer ID to delete: ");
             if (scanf("%11s", customerID) == EOF)
@@ -97,6 +103,11 @@ int main()
         }
         case 3:
         {
+            if (!hasCustomers(customers))
+            {
+                printf("Error: No customers exist. Please create a customer first.\n");
+                break;
+            }
             Node *cur = customers->next;
             while (cur != NULL)
             {
@@ -112,6 +123,11 @@ int main()
         }
         case 4:
         {
+            if (!hasCustomers(customers))
+            {
+                printf("Error: No customers exist. Please create a customer first.\n");
+                break;
+            }
             addTransaction(customers, transactions);
             break;
         }
@@ -292,8 +308,15 @@ void addTransaction(Node *customers, TransactionBlock *transactions)
     }
 
     blocks->numTransactions = 0;
-    for (int i = 0; i < 5;)
-    {
+    int i = 0;
+    char choice;
+    
+    do {
+        if (i >= 5) {
+            printf("Maximum number of transactions (5) reached in this block.\n");
+            break;
+        }
+        
         printf("Enter source transaction ID: ");
 
         if (scanf("%11s", blocks->transactions[i].sourceTransactionID) == EOF)
@@ -332,20 +355,19 @@ void addTransaction(Node *customers, TransactionBlock *transactions)
 
         if (srcCustomer != NULL)
         {
-            // We enter here if transaction is Deposit.
+            // We enter here if transaction is NOT Deposit.
             char inPassword[50];
             printf("Enter password: ");
-            if (scanf("%11s", inPassword) == EOF)
+            if (scanf("%49s", inPassword) == EOF)
             {
                 clearerr(stdin);
                 continue;
-                ;
             }
 
             simpleEncryptDecrypt(inPassword);
             if (!verifyPassword(srcCustomer->data.password, inPassword))
             {
-                printf("Incorrect password; voiding transaction :(");
+                printf("Incorrect password; voiding transaction :(\n");
                 continue;
             }
         }
@@ -361,9 +383,14 @@ void addTransaction(Node *customers, TransactionBlock *transactions)
 
         blocks->numTransactions++;
         printf("Transaction added successfully.\n");
-
         i++;
-    }
+        
+        printf("Do you want to add another transaction? (y/n): ");
+        scanf(" %c", &choice);
+        
+    } while (choice == 'y' || choice == 'Y');
+    
+    free(blocks);
 }
 
 Node *findCustomerByTransactionID(Node *customers, char *input)
@@ -381,4 +408,9 @@ Node *findCustomerByTransactionID(Node *customers, char *input)
 int verifyPassword(char *wantPassword, char *inPassword)
 {
     return strcmp(wantPassword, inPassword) == 0;
+}
+
+int hasCustomers(Node *customers)
+{
+    return customers->next != NULL;
 }
